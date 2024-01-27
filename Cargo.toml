@@ -17,5 +17,6 @@ strip = "symbols"
 
 [dependencies]
 bevy = { version = "0.12.1", features = ["dynamic_linking"] }
+# bevy-inspector-egui: Disable default features to avoid including bevy_pbr
+bevy-inspector-egui = { version = "0.22.1", features = [] }
 bevy_rapier2d = "0.23.0"
-
