@@ -5,7 +5,7 @@ use super::data::Enemy;
 use crate::{
     components::Bullet,
     player::Player,
-    physics::collision_archetypes,
+    physics::collision_layers,
 };
 
 pub fn enemies_player_rushing(
@@ -54,7 +54,7 @@ pub fn enemy_setup(
             RigidBody::Dynamic,
             Velocity::default(),
             Collider::ball(3.0),
-            collision_archetypes::ENEMY,
+            collision_layers::ENEMY,
             GravityScale(0.0),
             CollidingEntities::default(),
             ActiveEvents::COLLISION_EVENTS,

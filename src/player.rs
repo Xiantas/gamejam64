@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
-use crate::{GameState, mouse::MouseInfos, physics::collision_archetypes, game::OnGameScreen, components::Bullet};
+use crate::{GameState, mouse::MouseInfos, physics::collision_layers, game::OnGameScreen, components::Bullet};
 
 #[derive(Default, Component)]
 pub struct Player {
@@ -43,7 +43,7 @@ impl Default for PlayerBundle {
             velocity: Velocity::default(),
             transform_bundle: TransformBundle::default(),
             collider: Collider::ball(4.0),
-            collision_groups: collision_archetypes::PLAYER,
+            collision_groups: collision_layers::PLAYER,
             gravity_scale: GravityScale(0.0),
         }
     }
@@ -96,7 +96,7 @@ pub fn shoot(
                         angvel: 0.0,
                     },
                     Collider::ball(2.0),
-                    collision_archetypes::BULLET,
+                    collision_layers::BULLET,
                     TransformBundle::from(Transform::from_translation(player_pos)),
                     GravityScale(0.0),
                     Sensor,
