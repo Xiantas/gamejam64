@@ -29,7 +29,7 @@ fn main() {
                 ..default()
             }),
             ..default()
-        }))
+        }).set(ImagePlugin::default_nearest()))
         .add_plugins(WorldInspectorPlugin::new().run_if(input_toggle_active(false, KeyCode::F3)))
         .add_state::<GameState>()
         .add_plugins(mouse::MousePlugin)
