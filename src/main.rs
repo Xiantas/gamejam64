@@ -19,7 +19,6 @@ pub enum GameState {
     Game,
 }
 
-
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(WindowPlugin {

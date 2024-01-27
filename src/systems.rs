@@ -1,13 +1,6 @@
-use bevy::{
-    prelude::*,
-};
+use bevy::prelude::*;
 
-use bevy_rapier2d::prelude::*;
-
-use crate::{
-    resources::MouseInfos,
-    components::Bullet,
-};
+use crate::components::Bullet;
 
 pub fn delete_bullets(
     mut commands: Commands,

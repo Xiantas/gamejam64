@@ -1,7 +1,6 @@
 use bevy::{
     prelude::*,
-    window::PrimaryWindow,
-    input::mouse::MouseMotion,
+    window::PrimaryWindow
 };
 
 use bevy_rapier2d::prelude::*;
