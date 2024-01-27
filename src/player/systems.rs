@@ -10,6 +10,7 @@ use crate::{
     player::components::Player,
     components::Bullet,
     game::OnGameScreen,
+    physics::collision_archetypes,
 };
 
 pub fn spawn_player(mut commands: Commands) {
@@ -18,9 +19,7 @@ pub fn spawn_player(mut commands: Commands) {
         .insert(RigidBody::Dynamic)
         .insert(Velocity::default())
         .insert(Collider::ball(50.0))
-        .insert(CollisionGroups::new(
-            Group::GROUP_1,
-            Group::GROUP_1))
+        .insert(collision_archetypes::PLAYER)
         .insert(TransformBundle::from(Transform::from_xyz(0.0, 0.0, 0.0)))
         .insert(GravityScale(0.0))
         .insert(OnGameScreen);
@@ -38,7 +37,7 @@ pub fn move_player(
         if keyboard_input.pressed(ScanCode(31)) {-1.0} else {0.0} +
         if keyboard_input.pressed(ScanCode(33)) {1.0} else {0.0};
 
-    movements.linvel = 200.0 * Vect{x: x_input, y: y_input}.normalize_or_zero();
+    movements.linvel = 300.0 * Vect{x: x_input, y: y_input}.normalize_or_zero();
 }
 
 pub fn shoot(
@@ -52,22 +51,23 @@ pub fn shoot(
             let dir = 500.0*(mouse_pos.xy() - player_pos.xy()).normalize();
 
             commands
-                .spawn(Bullet::default())
-                .insert(RigidBody::Dynamic)
-                .insert(Velocity {
-                    linvel: Vect {
-                        x: dir.x,
-                        y: dir.y,
+                .spawn((
+                    Bullet::default(),
+                    RigidBody::Dynamic,
+                    Velocity {
+                        linvel: Vect {
+                            x: dir.x,
+                            y: dir.y,
+                        },
+                        angvel: 0.0,
                     },
-                    angvel: 0.0,
-                })
-                .insert(Collider::ball(30.0))
-                .insert(CollisionGroups::new(
-                    Group::GROUP_2,
-                    Group::GROUP_3))
-                .insert(TransformBundle::from(Transform::from_translation(player_pos)))
-                .insert(GravityScale(0.0))
-                .insert(OnGameScreen);
+                    Collider::ball(30.0),
+                    collision_archetypes::BULLET,
+                    TransformBundle::from(Transform::from_translation(player_pos)),
+                    GravityScale(0.0),
+                    Sensor,
+                    OnGameScreen,
+                ));
         }
         mouse.clicking = false;
     }

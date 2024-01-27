@@ -6,6 +6,8 @@ mod player;
 mod ui;
 mod utils;
 mod game;
+mod enemies;
+mod physics;
 
 use bevy::{input::common_conditions::input_toggle_active, prelude::*};
 use bevy_inspector_egui::quick::WorldInspectorPlugin;

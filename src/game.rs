@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::{player, systems, utils::despawn_with_component, GameState};
+use crate::{player, enemies, systems, utils::despawn_with_component, GameState};
 
 
 pub struct GamePlugin;
@@ -16,6 +16,8 @@ impl Plugin for GamePlugin {
             .add_plugins(RapierDebugRenderPlugin::default())
 
             .add_plugins(player::PlayerPlugin)
+            .add_plugins(enemies::EnemyPlugin)
+
             .add_systems(Update, systems::delete_bullets.run_if(in_state(GameState::Game)));
     }
 }
