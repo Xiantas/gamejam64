@@ -4,7 +4,7 @@ use bevy_rapier2d::prelude::*;
 use super::data::Enemy;
 use crate::{
     components::Bullet,
-    player::components::Player,
+    player::Player,
     physics::collision_archetypes,
 };
 

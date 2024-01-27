@@ -1,17 +1,36 @@
-use bevy::{
-    prelude::*,
-    window::PrimaryWindow
-};
-
+use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use crate::{
-    resources::MouseInfos,
-    player::components::Player,
-    components::Bullet,
-    game::OnGameScreen,
-    physics::collision_archetypes,
-};
+use crate::{GameState, mouse::MouseInfos, physics::collision_archetypes, game::OnGameScreen, components::Bullet};
+
+#[derive(Component)]
+pub struct Player {
+}
+
+pub struct PlayerPlugin;
+
+impl Plugin for PlayerPlugin {
+    fn build(&self, app: &mut App) {
+        app
+            .add_systems(OnEnter(GameState::Game), spawn_player)
+            .add_systems(Update, (
+                move_player,
+                shoot,
+            ).run_if(in_state(GameState::Game)));
+    }
+}
+
+//todo maybe use it
+#[derive(Bundle)]
+pub struct PlayerBundle {
+    player: Player,
+    rigidbody: RigidBody,
+    velocity: Velocity,
+    transform_bundle: TransformBundle,
+    collider: Collider,
+    collision_groups: CollisionGroups,
+    gravity_scale: GravityScale,
+}
 
 pub fn spawn_player(mut commands: Commands) {
     commands
@@ -71,24 +90,4 @@ pub fn shoot(
         }
         mouse.clicking = false;
     }
-}
-
-pub fn clicks_handeling(
-    mut mouse: ResMut<MouseInfos>,
-    clicks: Res<Input<MouseButton>>,
-) {
-    mouse.clicking |= clicks.pressed(MouseButton::Left)
-}
-
-pub fn mouse_pos_updater(
-    mut mouse: ResMut<MouseInfos>,
-    q_window: Query<&Window, With<PrimaryWindow>>,
-    q_camera: Query<(&Camera, &GlobalTransform)>,
-) {
-    let (camera, camera_transform) = q_camera.single();
-    let window = q_window.single();
-
-    mouse.pos = window.cursor_position()
-        .and_then(|cur_pos| camera.viewport_to_world_2d(camera_transform, cur_pos))
-        .map(|v2| v2.extend(0.0));
 }

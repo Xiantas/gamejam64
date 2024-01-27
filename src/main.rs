@@ -1,12 +1,12 @@
 mod components;
 mod systems;
-mod resources;
 mod player;
 mod ui;
 mod utils;
 mod game;
 mod enemies;
 mod physics;
+mod mouse;
 
 use bevy::{input::common_conditions::input_toggle_active, prelude::*};
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
@@ -32,6 +32,7 @@ fn main() {
         }))
         .add_plugins(WorldInspectorPlugin::new().run_if(input_toggle_active(false, KeyCode::F3)))
         .add_state::<GameState>()
+        .add_plugins(mouse::MousePlugin)
         .add_plugins((ui::splash::SplashPlugin, ui::menu::MenuPlugin, game::GamePlugin))
         .run();
 }
