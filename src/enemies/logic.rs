@@ -12,7 +12,8 @@ pub fn enemies_player_rushing(
     mut enemies: Query<(&mut Velocity, &Transform, &Enemy)>,
     player: Query<&Transform, With<Player>>,
 ) {
-    let player = player.single();
+    let Ok(player) = player.get_single() else { return };
+
     for (mut v, t, e) in &mut enemies {
         let dir = (player.translation - t.translation).xy().normalize_or_zero();
         v.linvel = e.speed * Vect{x: dir.x, y: dir.y};

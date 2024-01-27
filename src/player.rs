@@ -55,9 +55,11 @@ pub fn spawn_player(mut commands: Commands) {
 
 pub fn move_player(
     keyboard_input: Res<Input<ScanCode>>,
-    mut movements: Query<&mut Velocity, With<Player>>
+    mut player_velocity: Query<&mut Velocity, With<Player>>
 ) {
-    let mut movements = movements.single_mut();
+
+    let Ok(mut player_velocity) = player_velocity.get_single_mut() else { return };
+
     let y_input: f32 =
         if keyboard_input.pressed(ScanCode(18)) {1.0} else {0.0} +
         if keyboard_input.pressed(ScanCode(32)) {-1.0} else {0.0};
@@ -65,7 +67,7 @@ pub fn move_player(
         if keyboard_input.pressed(ScanCode(31)) {-1.0} else {0.0} +
         if keyboard_input.pressed(ScanCode(33)) {1.0} else {0.0};
 
-    movements.linvel = 100.0 * Vect{x: x_input, y: y_input}.normalize_or_zero();
+        player_velocity.linvel = 100.0 * Vect{x: x_input, y: y_input}.normalize_or_zero();
 }
 
 pub fn shoot(
@@ -73,9 +75,13 @@ pub fn shoot(
     player: Query<&Transform, With<Player>>,
     mut mouse: ResMut<MouseInfos>,
 ) {
+
+    let Ok(player) = player.get_single() else { return };
+
     if mouse.clicking {
         if let Some(mouse_pos) = mouse.pos {
-            let player_pos = player.single().translation;
+
+            let player_pos = player.translation;
             let dir = 60.0*(mouse_pos.xy() - player_pos.xy()).normalize();
 
             commands
