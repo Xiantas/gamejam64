@@ -6,10 +6,6 @@ use bevy::{
     },
 };
 
-#[derive(Component)]
-pub struct Player {
-}
-
 #[derive(Component, Clone)]
 pub struct Bullet {
     pub time_to_live: Timer,
@@ -21,4 +17,10 @@ impl Default for Bullet {
             time_to_live: Timer::from_seconds(3.0, TimerMode::Once),
         }
     }
+}
+
+#[derive(Component)]
+pub struct Enemy {
+    pub health: i32,
+    pub speed: f32,
 }
