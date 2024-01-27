@@ -1,5 +1,6 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, render::camera::ScalingMode};
 use bevy_rapier2d::prelude::*;
+use bevy_ecs_ldtk::prelude::*;
 
 use crate::{player, enemies, systems, utils::despawn_with_component, GameState};
 
@@ -17,9 +18,22 @@ impl Plugin for GamePlugin {
 
             .add_plugins(player::PlayerPlugin)
             .add_plugins(enemies::EnemyPlugin)
+            .add_plugins(LdtkPlugin)
+            .insert_resource(LevelSelection::index(0))
+            .register_ldtk_int_cell::<GroundBundle>(1)
+            .add_systems(OnExit(GameState::Game), despawn_with_component::<Wall>)
 
             .add_systems(Update, systems::delete_bullets.run_if(in_state(GameState::Game)));
+
     }
+}
+
+#[derive(Default, Component)]
+struct Wall;
+
+#[derive(Default, Bundle, LdtkIntCell)]
+struct GroundBundle {
+    wall: Wall,
 }
 
 // Tag component used to tag entities added on the game screen
@@ -27,15 +41,24 @@ impl Plugin for GamePlugin {
 pub struct OnGameScreen;
 
 fn game_setup(
-    mut commands: Commands
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
 ) {
     commands.spawn(Camera2dBundle{
         projection: OrthographicProjection {
-            scale: 0.5,
+            scale: 1.0,
+            near: -1000.0,
+            scaling_mode: ScalingMode::WindowSize(8.0),
             ..Default::default()
         },
         ..Default::default()
     }).insert(OnGameScreen);
+
+    commands.spawn(LdtkWorldBundle {
+        ldtk_handle: asset_server.load("test_level.ldtk"),
+        ..Default::default()
+    })
+    .insert(OnGameScreen);
 }
 
 fn game(

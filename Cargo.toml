@@ -19,4 +19,9 @@ strip = "symbols"
 bevy = { version = "0.12.1", features = ["dynamic_linking"] }
 # bevy-inspector-egui: Disable default features to avoid including bevy_pbr
 bevy-inspector-egui = { version = "0.22.1", features = [] }
+bevy_ecs_ldtk = "0.8.0"
 bevy_rapier2d = "0.23.0"
+
+[patch.crates-io]
+bevy_ecs_ldtk = { git = "https://github.com/trouv/bevy_ecs_ldtk", branch = "feat/bevy-0.12" }
+bevy_ecs_tilemap = { git = "https://github.com/StarArawn/bevy_ecs_tilemap", branch = "main" }
