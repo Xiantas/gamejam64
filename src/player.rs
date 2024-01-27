@@ -3,7 +3,7 @@ use bevy_rapier2d::prelude::*;
 
 use crate::{GameState, mouse::MouseInfos, physics::collision_archetypes, game::OnGameScreen, components::Bullet};
 
-#[derive(Component)]
+#[derive(Default, Component)]
 pub struct Player {
 }
 
@@ -33,15 +33,23 @@ pub struct PlayerBundle {
     gravity_scale: GravityScale,
 }
 
+impl Default for PlayerBundle {
+    fn default() -> Self {
+        Self {
+            player: Player::default(),
+            rigidbody: RigidBody::Dynamic,
+            velocity: Velocity::default(),
+            transform_bundle: TransformBundle::default(),
+            collider: Collider::ball(4.0),
+            collision_groups: collision_archetypes::PLAYER,
+            gravity_scale: GravityScale(0.0),
+        }
+    }
+}
+
 pub fn spawn_player(mut commands: Commands) {
     commands
-        .spawn(Player{})
-        .insert(RigidBody::Dynamic)
-        .insert(Velocity::default())
-        .insert(Collider::ball(4.0))
-        .insert(collision_archetypes::PLAYER)
-        .insert(TransformBundle::from(Transform::from_xyz(0.0, 0.0, 0.0)))
-        .insert(GravityScale(0.0))
+        .spawn(PlayerBundle::default())
         .insert(OnGameScreen);
 }
 
