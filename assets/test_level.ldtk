@@ -48,7 +48,7 @@
 			"uid": 38,
 			"doc": null,
 			"uiColor": null,
-			"gridSize": 16,
+			"gridSize": 8,
 			"guideGridWid": 0,
 			"guideGridHei": 0,
 			"displayOpacity": 1,
@@ -425,8 +425,8 @@
 			"exportToToc": false,
 			"allowOutOfBounds": false,
 			"doc": null,
-			"width": 16,
-			"height": 16,
+			"width": 8,
+			"height": 8,
 			"resizableX": false,
 			"resizableY": false,
 			"minWidth": null,
@@ -449,8 +449,8 @@
 			"maxCount": 1,
 			"limitScope": "PerLevel",
 			"limitBehavior": "MoveLastOne",
-			"pivotX": 0,
-			"pivotY": 0,
+			"pivotX": 0.5,
+			"pivotY": 0.5,
 			"fieldDefs": []
 		}
 	], "tilesets": [
@@ -524,9 +524,9 @@
 				{
 					"__identifier": "Entities",
 					"__type": "Entities",
-					"__cWid": 8,
-					"__cHei": 8,
-					"__gridSize": 16,
+					"__cWid": 16,
+					"__cHei": 16,
+					"__gridSize": 8,
 					"__opacity": 1,
 					"__pxTotalOffsetX": 0,
 					"__pxTotalOffsetY": 0,
@@ -547,19 +547,19 @@
 					"entityInstances": [
 						{
 							"__identifier": "Player",
-							"__grid": [2,4],
-							"__pivot": [0,0],
+							"__grid": [8,9],
+							"__pivot": [0.5,0.5],
 							"__tags": [],
 							"__tile": { "tilesetUid": 40, "x": 0, "y": 240, "w": 16, "h": 16 },
 							"__smartColor": "#3E8948",
 							"iid": "e0d17630-b0a0-11ee-a515-31e2c83e4f74",
-							"width": 16,
-							"height": 16,
+							"width": 8,
+							"height": 8,
 							"defUid": 39,
-							"px": [32,64],
+							"px": [68,76],
 							"fieldInstances": [],
-							"__worldX": 152,
-							"__worldY": 176
+							"__worldX": 188,
+							"__worldY": 188
 						}
 					]
 				},

@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
+use bevy_ecs_ldtk::prelude::*;
 
 use crate::{GameState, mouse::MouseInfos, physics::collision_archetypes, game::OnGameScreen, components::Bullet};
 
@@ -12,7 +13,7 @@ pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app
-            .add_systems(OnEnter(GameState::Game), spawn_player)
+            .register_ldtk_entity::<PlayerBundle>("Player")
             .add_systems(Update, (
                 move_player,
                 shoot,
@@ -22,11 +23,12 @@ impl Plugin for PlayerPlugin {
 }
 
 //todo maybe use it
-#[derive(Bundle)]
+#[derive(Bundle, LdtkEntity)]
 pub struct PlayerBundle {
     player: Player,
     rigidbody: RigidBody,
     velocity: Velocity,
+    #[with(spawn_player_transform)]
     transform_bundle: TransformBundle,
     collider: Collider,
     collision_groups: CollisionGroups,
@@ -47,10 +49,8 @@ impl Default for PlayerBundle {
     }
 }
 
-pub fn spawn_player(mut commands: Commands) {
-    commands
-        .spawn(PlayerBundle::default())
-        .insert(OnGameScreen);
+fn spawn_player_transform(entity_instance: &EntityInstance) -> TransformBundle {
+    TransformBundle::from_transform(Transform::from_xyz(entity_instance.grid.x as f32, entity_instance.grid.y as f32, 0.0))
 }
 
 pub fn move_player(
