@@ -3,10 +3,21 @@ mod systems;
 mod resources;
 mod setups;
 mod player;
+mod ui;
 mod utils;
+mod game;
 
 use bevy::prelude::*;
-use bevy_rapier2d::prelude::*;
+
+// Enum that will be used as a global state for the game
+#[derive(Clone, Copy, Default, Eq, PartialEq, Debug, Hash, States)]
+pub enum GameState {
+    #[default]
+    Splash,
+    Menu,
+    Game,
+}
+
 
 fn main() {
     App::new()
@@ -18,10 +29,8 @@ fn main() {
             }),
             ..default()
         }))
-        .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
-        .add_plugins(RapierDebugRenderPlugin::default())
-        .add_plugins(player::PlayerPlugin)
+        .add_state::<GameState>()
         .add_systems(Startup, setups::setup_graphics)
-        .add_systems(Update, systems::delete_bullets)
+        .add_plugins((ui::splash::SplashPlugin, ui::menu::MenuPlugin, game::GamePlugin))
         .run();
 }

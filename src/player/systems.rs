@@ -10,6 +10,7 @@ use crate::{
     resources::MouseInfos,
     player::components::Player,
     components::Bullet,
+    game::OnGameScreen,
 };
 
 pub fn spawn_player(mut commands: Commands) {
@@ -22,7 +23,8 @@ pub fn spawn_player(mut commands: Commands) {
             Group::GROUP_1,
             Group::GROUP_1))
         .insert(TransformBundle::from(Transform::from_xyz(0.0, 0.0, 0.0)))
-        .insert(GravityScale(0.0));
+        .insert(GravityScale(0.0))
+        .insert(OnGameScreen);
 }
 
 pub fn move_player(
@@ -65,7 +67,8 @@ pub fn shoot(
                     Group::GROUP_2,
                     Group::GROUP_3))
                 .insert(TransformBundle::from(Transform::from_translation(player_pos)))
-                .insert(GravityScale(0.0));
+                .insert(GravityScale(0.0))
+                .insert(OnGameScreen);
         }
         mouse.clicking = false;
     }
