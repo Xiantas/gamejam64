@@ -40,52 +40,23 @@ pub fn bullet_damage(
 pub fn enemy_setup(
     mut commands: Commands,
 ) {
-    commands.spawn((
-        Enemy {
-            health: 50.0,
-            speed: 100.0
-        },
-        TransformBundle::from(
-            Transform::from_xyz(0.0, 400.0, 0.0)
-        ),
-        RigidBody::Dynamic,
-        Velocity::default(),
-        Collider::ball(40.0),
-        collision_archetypes::ENEMY,
-        GravityScale(0.0),
-        CollidingEntities::default(),
-        ActiveEvents::COLLISION_EVENTS,
-    ));
-    commands.spawn((
-        Enemy {
-            health: 50.0,
-            speed: 100.0
-        },
-        TransformBundle::from(
-            Transform::from_xyz(0.0, 600.0, 0.0)
-        ),
-        RigidBody::Dynamic,
-        Velocity::default(),
-        Collider::ball(40.0),
-        collision_archetypes::ENEMY,
-        GravityScale(0.0),
-        CollidingEntities::default(),
-        ActiveEvents::COLLISION_EVENTS,
-    ));
-    commands.spawn((
-        Enemy {
-            health: 50.0,
-            speed: 100.0
-        },
-        TransformBundle::from(
-            Transform::from_xyz(0.0, 200.0, 0.0)
-        ),
-        RigidBody::Dynamic,
-        Velocity::default(),
-        Collider::ball(40.0),
-        collision_archetypes::ENEMY,
-        GravityScale(0.0),
-        CollidingEntities::default(),
-        ActiveEvents::COLLISION_EVENTS,
-    ));
+    for i in 0..3 {
+        // TODO: use bundle and default values
+        commands.spawn((
+            Enemy {
+                health: 50.0,
+                speed: 60.0
+            },
+            TransformBundle::from(
+                Transform::from_xyz(0.0, (i+1) as f32 * 200.0, 0.0)
+            ),
+            RigidBody::Dynamic,
+            Velocity::default(),
+            Collider::ball(7.0),
+            collision_archetypes::ENEMY,
+            GravityScale(0.0),
+            CollidingEntities::default(),
+            ActiveEvents::COLLISION_EVENTS,
+        ));
+    }
 }
