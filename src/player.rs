@@ -37,7 +37,7 @@ pub fn spawn_player(mut commands: Commands) {
         .spawn(Player{})
         .insert(RigidBody::Dynamic)
         .insert(Velocity::default())
-        .insert(Collider::ball(8.0))
+        .insert(Collider::ball(4.0))
         .insert(collision_archetypes::PLAYER)
         .insert(TransformBundle::from(Transform::from_xyz(0.0, 0.0, 0.0)))
         .insert(GravityScale(0.0))
@@ -67,7 +67,7 @@ pub fn shoot(
     if mouse.clicking {
         if let Some(mouse_pos) = mouse.pos {
             let player_pos = player.single().translation;
-            let dir = 500.0*(mouse_pos.xy() - player_pos.xy()).normalize();
+            let dir = 60.0*(mouse_pos.xy() - player_pos.xy()).normalize();
 
             commands
                 .spawn((
@@ -80,7 +80,7 @@ pub fn shoot(
                         },
                         angvel: 0.0,
                     },
-                    Collider::ball(4.0),
+                    Collider::ball(2.0),
                     collision_archetypes::BULLET,
                     TransformBundle::from(Transform::from_translation(player_pos)),
                     GravityScale(0.0),

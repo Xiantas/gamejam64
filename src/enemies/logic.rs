@@ -52,7 +52,7 @@ pub fn enemy_setup(
             ),
             RigidBody::Dynamic,
             Velocity::default(),
-            Collider::ball(7.0),
+            Collider::ball(3.0),
             collision_archetypes::ENEMY,
             GravityScale(0.0),
             CollidingEntities::default(),
