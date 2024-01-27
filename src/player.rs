@@ -37,7 +37,7 @@ pub fn spawn_player(mut commands: Commands) {
         .spawn(Player{})
         .insert(RigidBody::Dynamic)
         .insert(Velocity::default())
-        .insert(Collider::ball(50.0))
+        .insert(Collider::ball(8.0))
         .insert(collision_archetypes::PLAYER)
         .insert(TransformBundle::from(Transform::from_xyz(0.0, 0.0, 0.0)))
         .insert(GravityScale(0.0))
@@ -56,7 +56,7 @@ pub fn move_player(
         if keyboard_input.pressed(ScanCode(31)) {-1.0} else {0.0} +
         if keyboard_input.pressed(ScanCode(33)) {1.0} else {0.0};
 
-    movements.linvel = 300.0 * Vect{x: x_input, y: y_input}.normalize_or_zero();
+    movements.linvel = 100.0 * Vect{x: x_input, y: y_input}.normalize_or_zero();
 }
 
 pub fn shoot(
@@ -80,7 +80,7 @@ pub fn shoot(
                         },
                         angvel: 0.0,
                     },
-                    Collider::ball(30.0),
+                    Collider::ball(4.0),
                     collision_archetypes::BULLET,
                     TransformBundle::from(Transform::from_translation(player_pos)),
                     GravityScale(0.0),
