@@ -48,7 +48,7 @@ fn splash_setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                 ..default()
             });
         });
-    commands.insert_resource(SplashTimer(Timer::from_seconds(2.0, TimerMode::Once)));
+    commands.insert_resource(SplashTimer(Timer::from_seconds(1.0, TimerMode::Once)));
 }
 
 fn countdown(
