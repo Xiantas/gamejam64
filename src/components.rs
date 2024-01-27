@@ -18,9 +18,3 @@ impl Default for Bullet {
         }
     }
 }
-
-#[derive(Component)]
-pub struct Enemy {
-    pub health: i32,
-    pub speed: f32,
-}

@@ -71,18 +71,6 @@ pub fn shoot(
     }
 }
 
-pub fn delete_bullets(
-    mut commands: Commands,
-    time: Res<Time>,
-    mut bullets: Query<(Entity, &mut Bullet)>,
-) {
-    for (entity, mut bullet) in &mut bullets {
-        if bullet.time_to_live.tick(time.delta()).finished() {
-            commands.entity(entity).despawn();
-        }
-    }
-}
-
 pub fn clicks_handeling(
     mut mouse: ResMut<MouseInfos>,
     clicks: Res<Input<MouseButton>>,
