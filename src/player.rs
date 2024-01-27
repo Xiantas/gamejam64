@@ -16,6 +16,7 @@ impl Plugin for PlayerPlugin {
             .add_systems(Update, (
                 move_player,
                 shoot,
+                sync_player_camera,
             ).run_if(in_state(GameState::Game)));
     }
 }
@@ -90,4 +91,14 @@ pub fn shoot(
         }
         mouse.clicking = false;
     }
+}
+
+pub fn sync_player_camera(
+    player: Query<&Transform, With<Player>>,
+    mut camera: Query<&mut Transform, (Without<Player>, With<OrthographicProjection>)>,
+) {
+    let Ok(player) = player.get_single() else { return };
+    let Ok(mut camera_transform) = camera.get_single_mut() else { return };
+
+    camera_transform.translation = player.translation;
 }
