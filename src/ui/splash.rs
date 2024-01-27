@@ -21,6 +21,11 @@ struct OnSplashScreen;
 struct SplashTimer(Timer);
 
 fn splash_setup(mut commands: Commands, asset_server: Res<AssetServer>) {
+
+    commands
+        .spawn(Camera2dBundle::default())
+        .insert(OnSplashScreen);
+
     let icon = asset_server.load("laviolence.png");
     // Display the logo
     commands

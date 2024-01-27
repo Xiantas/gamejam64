@@ -1,7 +1,6 @@
 mod components;
 mod systems;
 mod resources;
-mod setups;
 mod player;
 mod ui;
 mod utils;
@@ -33,7 +32,6 @@ fn main() {
         }))
         .add_plugins(WorldInspectorPlugin::new().run_if(input_toggle_active(false, KeyCode::F3)))
         .add_state::<GameState>()
-        .add_systems(Startup, setups::setup_graphics)
         .add_plugins((ui::splash::SplashPlugin, ui::menu::MenuPlugin, game::GamePlugin))
         .run();
 }

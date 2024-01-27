@@ -1,6 +1,6 @@
 use bevy::{app::AppExit, prelude::*};
 
-use crate::{GameState, utils::despawn_with_component};
+use crate::{utils::despawn_with_component, GameState};
 
 const TEXT_COLOR: Color = Color::rgb(0.9, 0.9, 0.9);
 
@@ -62,8 +62,12 @@ fn button_system(
     }
 }
 
-fn menu_setup(mut menu_state: ResMut<NextState<MenuState>>) {
+fn menu_setup(mut commands: Commands, mut menu_state: ResMut<NextState<MenuState>>) {
     menu_state.set(MenuState::Main);
+
+    commands
+    .spawn(Camera2dBundle::default())
+    .insert(OnMainMenuScreen);
 }
 
 fn main_menu_setup(mut commands: Commands) {

@@ -27,8 +27,15 @@ impl Plugin for GamePlugin {
 pub struct OnGameScreen;
 
 fn game_setup(
-    mut _commands: Commands,
+    mut commands: Commands
 ) {
+    commands.spawn(Camera2dBundle{
+        projection: OrthographicProjection {
+            scale: 0.5,
+            ..Default::default()
+        },
+        ..Default::default()
+    }).insert(OnGameScreen);
 }
 
 fn game(
