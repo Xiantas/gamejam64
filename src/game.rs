@@ -2,15 +2,14 @@ use bevy::{prelude::*, render::camera::ScalingMode};
 use bevy_rapier2d::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
-use crate::{player, enemies, systems, utils::despawn_with_component, GameState};
-
+use crate::{enemies, physics::collision_layers, player, systems, utils::despawn_with_component, GameState};
 
 pub struct GamePlugin;
 
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::Game), game_setup)
-            .add_systems(Update, game.run_if(in_state(GameState::Game)))
+            .add_systems(Update, (game, add_walls_colliders).run_if(in_state(GameState::Game)))
             .add_systems(OnExit(GameState::Game), despawn_with_component::<OnGameScreen>)
 
             .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
@@ -20,20 +19,37 @@ impl Plugin for GamePlugin {
             .add_plugins(player::PlayerPlugin)
             .add_plugins(enemies::EnemyPlugin)
             .insert_resource(LevelSelection::index(0))
-            .register_ldtk_int_cell::<GroundBundle>(1)
-            .add_systems(OnExit(GameState::Game), despawn_with_component::<Wall>)
 
             .add_systems(Update, systems::delete_bullets.run_if(in_state(GameState::Game)));
-
     }
 }
 
-#[derive(Default, Component)]
-struct Wall;
+#[derive(Bundle)]
+struct WallBundle {
+    rigidbody: RigidBody,
+    collider: Collider,
+    collision_groups: CollisionGroups,
+}
 
-#[derive(Default, Bundle, LdtkIntCell)]
-struct GroundBundle {
-    wall: Wall,
+impl Default for WallBundle {
+    fn default() -> Self {
+        Self {
+            rigidbody: RigidBody::Fixed,
+            collider: Collider::cuboid(4.0, 4.0),
+            collision_groups: collision_layers::WALL,
+        }
+    }
+}
+
+fn add_walls_colliders(
+    mut commands: Commands,
+    entity_query: Query<(Entity, &TileEnumTags), Added<TileEnumTags>>,
+) {
+    for (entity, tile_enum_tags) in entity_query.iter() {
+        if tile_enum_tags.tags.contains(&"Wall".into()) && tile_enum_tags.source_enum_uid.is_some() {
+            commands.entity(entity).insert(WallBundle::default());
+        }
+    }
 }
 
 // Tag component used to tag entities added on the game screen
