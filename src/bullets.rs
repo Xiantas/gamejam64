@@ -9,7 +9,10 @@ use bevy_rapier2d::prelude::*;
 
 use crate::{
     physics::collision_layers,
-    game::Wall,
+    game::{
+        Wall,
+        enemy::Enemy,
+    },
 };
 
 #[derive(Component, Clone)]
@@ -91,6 +94,25 @@ pub fn bullets_stop_on_wall(
             if ce.contains(w) {
                 commands.entity(e).despawn();
                 break;
+            }
+        }
+    }
+}
+
+pub fn bullet_damage(
+    mut commands: Commands,
+    mut enemies: Query<(Entity, &mut Enemy)>,
+    bullets: Query<(Entity, &Bullet, &CollidingEntities)>,
+) {
+    for (b_entity, bullet, collisions) in &bullets {
+        for (e_entity, mut enemy) in &mut enemies {
+            if collisions.contains(e_entity) {
+                enemy.health -= bullet.damage;
+                enemy.track_player = true;
+                commands.entity(b_entity).despawn();
+                if enemy.health < 0.0 {
+                    commands.entity(e_entity).despawn();
+                }
             }
         }
     }

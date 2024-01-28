@@ -6,7 +6,7 @@ use crate::{physics::collision_layers, player, bullets, utils::despawn_with_comp
 
 mod exit;
 mod collision;
-mod enemy;
+pub mod enemy;
 
 pub struct GamePlugin;
 

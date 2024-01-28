@@ -2,6 +2,8 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
+use crate::bullets::bullet_damage;
+
 #[derive(Component)]
 pub struct Enemy {
     pub health: f32,
@@ -16,7 +18,7 @@ impl Default for Enemy {
         Self {
             health: 4.5,
             speed: 40.0,
-            track_distance: 40.0,
+            track_distance: 80.0,
             track_player: false,
         }
     }
@@ -109,24 +111,6 @@ pub fn enemies_player_rushing(
             // if the enemy is too far away from the player, don't rush
             if player.translation.xy().distance(enemy_transform.translation.xy()) <= enemy.track_distance {
                 enemy.track_player = true;
-            }
-        }
-    }
-}
-
-pub fn bullet_damage(
-    mut commands: Commands,
-    mut enemies: Query<(Entity, &mut Enemy, &CollidingEntities)>,
-    bullets: Query<(Entity, &Bullet)>,
-) {
-    for (e_entity, mut enemy, collisions) in &mut enemies {
-        for (b_entity, bullet) in &bullets {
-            if collisions.contains(b_entity) {
-                enemy.health -= bullet.damage;
-                commands.entity(b_entity).despawn();
-                if enemy.health < 0.0 {
-                    commands.entity(e_entity).despawn();
-                }
             }
         }
     }

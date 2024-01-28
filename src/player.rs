@@ -1,8 +1,14 @@
+use std::time::Duration;
+
 use bevy::{
     prelude::*,
     render::view::{
         InheritedVisibility,
         ViewVisibility,
+    },
+    time::{
+        Timer,
+        TimerMode,
     },
 };
 use bevy_rapier2d::prelude::*;
@@ -12,16 +18,18 @@ use crate::{
     GameState,
     mouse::MouseInfos,
     physics::collision_layers,
-    game::OnGameScreen,
+    game::{
+        OnGameScreen,
+    },
     bullets::{
-        Bullet,
         BulletBundle,
     },
 };
 
 #[derive(Default, Component)]
 pub struct Player {
-    speed: f32,
+    pub speed: f32,
+    pub reload: Timer,
 }
 
 pub struct PlayerPlugin;
@@ -100,6 +108,7 @@ pub fn spawn_player(
             gravity_scale: GravityScale(0.0),
             player: Player {
                 speed: 45.0,
+                reload: Timer::new(Duration::from_secs_f32(0.5), TimerMode::Once),
             },
             active_events: ActiveEvents::COLLISION_EVENTS,
             ..PlayerBundle::default()
@@ -127,13 +136,15 @@ pub fn move_player(
 pub fn shoot(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
-    player: Query<&Transform, With<Player>>,
+    time: Res<Time>,
+    mut player: Query<(&Transform, &mut Player)>,
     mut mouse: ResMut<MouseInfos>,
 ) {
 
-    let Ok(player) = player.get_single() else { return };
+    let Ok((player, mut p)) = player.get_single_mut() else { return };
 
-    if mouse.clicking {
+    if p.reload.tick(time.delta()).finished() && mouse.clicking {
+        p.reload.reset();
         if let Some(mouse_pos) = mouse.pos {
 
             let player_pos = player.translation;
@@ -152,8 +163,8 @@ pub fn shoot(
                 })
                 .insert(OnGameScreen);
         }
-        mouse.clicking = false;
     }
+    mouse.clicking = false;
 }
 
 pub fn sync_player_camera(
