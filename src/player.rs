@@ -30,7 +30,6 @@ impl Plugin for PlayerPlugin {
     }
 }
 
-
 //todo maybe use it
 #[derive(Default, Bundle)]
 pub struct PlayerBundle {
@@ -47,19 +46,22 @@ pub struct PlayerBundle {
     visibility: Visibility,
     inherited_visibility: InheritedVisibility,
     view_visibility: ViewVisibility,
+
+    active_events: ActiveEvents,
+    colliding_entities: CollidingEntities,
 }
 
 fn set_player_position_from_ldtk_entity(
     entity_query: Query<&EntityInstance, Added<EntityInstance>>,
     mut player_transform: Query<&mut Transform, With<Player>>,
 ) {
-
     let Ok(mut player_transform) = player_transform.get_single_mut() else { return };
-
+    
     for entity_instance in entity_query.iter() {
         if entity_instance.identifier == "Player" {
             player_transform.translation.x = entity_instance.grid.x as f32 * 8.0;
-            player_transform.translation.y = entity_instance.grid.y as f32 * 8.0;
+            // Fix the y position because the y axis is inverted in ldtk
+            player_transform.translation.y = (31-entity_instance.grid.y) as f32 * 8.0;
             return;
         }
     }
@@ -90,6 +92,7 @@ pub fn spawn_player(
             player: Player {
                 speed: 45.0,
             },
+            active_events: ActiveEvents::COLLISION_EVENTS,
             ..PlayerBundle::default()
         })
         .insert(OnGameScreen);

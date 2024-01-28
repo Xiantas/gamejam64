@@ -3,6 +3,8 @@ use bevy_rapier2d::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
 use crate::{enemies, physics::collision_layers, player, systems, utils::despawn_with_component, GameState};
+
+mod exit;
 mod collision;
 
 pub struct GamePlugin;
@@ -20,6 +22,9 @@ impl Plugin for GamePlugin {
             .add_plugins(player::PlayerPlugin)
             .add_plugins(enemies::EnemyPlugin)
             .insert_resource(LevelSelection::index(0))
+
+            .register_ldtk_entity::<exit::ExitBundle>("Exit")
+            .add_systems(Update, exit::exit_detection.run_if(in_state(GameState::Game)))
 
             .add_systems(Update, systems::delete_bullets.run_if(in_state(GameState::Game)));
     }
