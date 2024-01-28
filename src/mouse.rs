@@ -36,5 +36,5 @@ pub fn clicks_handeling(
     mut mouse: ResMut<MouseInfos>,
     clicks: Res<Input<MouseButton>>,
 ) {
-    mouse.clicking |= clicks.pressed(MouseButton::Left);
+    mouse.clicking |= clicks.pressed(MouseButton::Right);
 }

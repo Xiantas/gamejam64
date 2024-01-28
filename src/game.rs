@@ -16,9 +16,9 @@ impl Plugin for GamePlugin {
             .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
             .add_plugins(RapierDebugRenderPlugin::default())
 
+            .add_plugins(LdtkPlugin)
             .add_plugins(player::PlayerPlugin)
             .add_plugins(enemies::EnemyPlugin)
-            .add_plugins(LdtkPlugin)
             .insert_resource(LevelSelection::index(0))
             .register_ldtk_int_cell::<GroundBundle>(1)
             .add_systems(OnExit(GameState::Game), despawn_with_component::<Wall>)

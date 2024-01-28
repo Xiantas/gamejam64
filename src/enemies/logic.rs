@@ -58,6 +58,7 @@ pub fn enemy_setup(
             GravityScale(0.0),
             CollidingEntities::default(),
             ActiveEvents::COLLISION_EVENTS,
+            LockedAxes::ROTATION_LOCKED_Z,
         ));
     }
 }

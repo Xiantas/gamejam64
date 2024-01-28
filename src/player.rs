@@ -1,4 +1,10 @@
-use bevy::prelude::*;
+use bevy::{
+    prelude::*,
+    render::view::{
+        InheritedVisibility,
+        ViewVisibility,
+    },
+};
 use bevy_rapier2d::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
@@ -14,6 +20,7 @@ impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app
             .register_ldtk_entity::<PlayerBundle>("Player")
+            .add_systems(OnEnter(GameState::Game), init_player_texture)
             .add_systems(Update, (
                 move_player,
                 shoot,
@@ -33,6 +40,12 @@ pub struct PlayerBundle {
     collider: Collider,
     collision_groups: CollisionGroups,
     gravity_scale: GravityScale,
+    locked_axes: LockedAxes,
+    sprite: Sprite,
+    texture: Handle<Image>,
+    visibility: Visibility,
+    inherited_visibility: InheritedVisibility,
+    view_visibility: ViewVisibility,
 }
 
 impl Default for PlayerBundle {
@@ -45,12 +58,27 @@ impl Default for PlayerBundle {
             collider: Collider::ball(4.0),
             collision_groups: collision_layers::PLAYER,
             gravity_scale: GravityScale(0.0),
+            locked_axes: LockedAxes::ROTATION_LOCKED_Z,
+            sprite: Sprite::default(),
+            texture: Handle::default(),
+            visibility: Visibility::default(),
+            inherited_visibility: InheritedVisibility::default(),
+            view_visibility: ViewVisibility::default(),
         }
     }
 }
 
 fn spawn_player_transform(entity_instance: &EntityInstance) -> TransformBundle {
     TransformBundle::from_transform(Transform::from_xyz(entity_instance.grid.x as f32, entity_instance.grid.y as f32, 0.0))
+}
+
+pub fn init_player_texture(
+    asset_server: Res<AssetServer>,
+    mut player_texture: Query<&mut Handle<Image>, With<Player>>,
+) {
+    let Ok(mut player_texture) = player_texture.get_single_mut() else { return };
+
+    *player_texture = asset_server.load("wizard_red_staff_idle_01.png");
 }
 
 pub fn move_player(
