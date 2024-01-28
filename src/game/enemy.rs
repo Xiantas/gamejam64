@@ -17,7 +17,7 @@ impl Default for Enemy {
     fn default() -> Self {
         Self {
             health: 4.5,
-            speed: 40.0,
+            speed: 30.0,
             track_distance: 80.0,
             track_player: false,
         }
@@ -49,19 +49,15 @@ use super::collision::ColliderBundle;
 pub struct EnemyBundle {
     enemy: Enemy,
     sprite_bundle: SpriteBundle,
-    sensor_bundle: ColliderBundle,
+    collider_bundle: ColliderBundle,
     collision_groups: CollisionGroups,
-    colliding_entities: CollidingEntities,
-    active_events: ActiveEvents,
 }
 
 impl Default for EnemyBundle {
     fn default() -> Self {
         EnemyBundle {
-            active_events: ActiveEvents::COLLISION_EVENTS,
             collision_groups: collision_layers::ENEMY,
-            colliding_entities: CollidingEntities::default(),
-            sensor_bundle: ColliderBundle::default(),
+            collider_bundle: ColliderBundle::default(),
             enemy: Enemy::default(),
             sprite_bundle: SpriteBundle::default(),
         }
@@ -90,7 +86,7 @@ impl LdtkEntity for EnemyBundle {
                 },
                 ..Default::default()
             },
-            sensor_bundle: ColliderBundle::from(entity_instance),
+            collider_bundle: ColliderBundle::from(entity_instance),
             ..Default::default()
         }
     }

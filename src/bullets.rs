@@ -55,7 +55,7 @@ impl Default for BulletBundle {
             bullet: Bullet::default(),
             rigidbody: RigidBody::Dynamic,
             velocity: Velocity::default(),
-            collider: Collider::ball(2.0),
+            collider: Collider::ball(1.7),
             collision_groups: collision_layers::BULLET,
             transform_bundle: TransformBundle::default(),
             gravity_scale: GravityScale(0.0),

@@ -20,6 +20,7 @@ use crate::{
     physics::collision_layers,
     game::{
         OnGameScreen,
+        enemy::Enemy,
     },
     bullets::{
         BulletBundle,
@@ -41,6 +42,7 @@ impl Plugin for PlayerPlugin {
             .add_systems(Update, (
                 set_player_position_from_ldtk_entity,
                 move_player,
+                death,
                 shoot,
                 sync_player_camera,
             ).run_if(in_state(GameState::Game)));
@@ -108,7 +110,7 @@ pub fn spawn_player(
             gravity_scale: GravityScale(0.0),
             player: Player {
                 speed: 45.0,
-                reload: Timer::new(Duration::from_secs_f32(0.5), TimerMode::Once),
+                reload: Timer::new(Duration::from_secs_f32(0.25), TimerMode::Once),
             },
             active_events: ActiveEvents::COLLISION_EVENTS,
             ..PlayerBundle::default()
@@ -167,6 +169,23 @@ pub fn shoot(
     mouse.clicking = false;
 }
 
+pub fn death(
+    player: Query<&CollidingEntities, With<Player>>,
+    enemies: Query<Entity, With<Enemy>>,
+    mut game_state: ResMut<NextState<GameState>>,
+    mut level: ResMut<LevelSelection>,
+) {
+    for c in &player {
+        for e in &enemies {
+            if c.contains(e) {
+                *level = LevelSelection::index(0);
+                game_state.set(GameState::Menu);
+            }
+        }
+    }
+}
+    
+
 pub fn sync_player_camera(
     player: Query<&Transform, With<Player>>,
     mut camera: Query<&mut Transform, (Without<Player>, With<OrthographicProjection>)>,
@@ -176,3 +195,4 @@ pub fn sync_player_camera(
 
     camera_transform.translation = player.translation;
 }
+
