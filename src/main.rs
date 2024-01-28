@@ -1,5 +1,4 @@
-mod components;
-mod systems;
+mod bullets;
 mod player;
 mod ui;
 mod utils;

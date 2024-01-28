@@ -8,7 +8,16 @@ use bevy::{
 use bevy_rapier2d::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
-use crate::{GameState, mouse::MouseInfos, physics::collision_layers, game::OnGameScreen, components::Bullet};
+use crate::{
+    GameState,
+    mouse::MouseInfos,
+    physics::collision_layers,
+    game::OnGameScreen,
+    bullets::{
+        Bullet,
+        BulletBundle,
+    },
+};
 
 #[derive(Default, Component)]
 pub struct Player {
@@ -129,24 +138,17 @@ pub fn shoot(
             let player_pos = player.translation;
             let dir = 100.0*(mouse_pos.xy() - player_pos.xy()).normalize();
 
-            commands
-                .spawn((
-                    Bullet::default(),
-                    RigidBody::Dynamic,
-                    Velocity {
-                        linvel: Vect {
-                            x: dir.x,
-                            y: dir.y,
-                        },
-                        angvel: 0.0,
+            commands.spawn(
+                BulletBundle {
+                    velocity: Velocity {
+                        linvel: Vect {x: dir.x, y: dir.y},
+                        ..default()
                     },
-                    Collider::ball(2.0),
-                    collision_layers::BULLET,
-                    TransformBundle::from(Transform::from_translation(player_pos)),
-                    GravityScale(0.0),
-                    Sensor,
-                    OnGameScreen,
-                ));
+                    transform_bundle: TransformBundle::from(
+                        Transform::from_translation(player_pos)),
+                    ..default()
+                })
+                .insert(OnGameScreen);
         }
         mouse.clicking = false;
     }

@@ -3,7 +3,7 @@ use bevy_rapier2d::prelude::*;
 
 use super::data::Enemy;
 use crate::{
-    components::Bullet,
+    bullets::Bullet,
     player::Player,
     physics::collision_layers,
 };

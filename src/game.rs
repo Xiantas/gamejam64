@@ -2,7 +2,7 @@ use bevy::{prelude::*, render::camera::ScalingMode};
 use bevy_rapier2d::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
-use crate::{enemies, physics::collision_layers, player, systems, utils::despawn_with_component, GameState};
+use crate::{enemies, physics::collision_layers, player, bullets, utils::despawn_with_component, GameState};
 
 mod exit;
 mod collision;
@@ -26,15 +26,19 @@ impl Plugin for GamePlugin {
             .register_ldtk_entity::<exit::ExitBundle>("Exit")
             .add_systems(Update, exit::exit_detection.run_if(in_state(GameState::Game)))
 
-            .add_systems(Update, systems::delete_bullets.run_if(in_state(GameState::Game)));
+            .add_systems(Update, bullets::deprecate_bullets.run_if(in_state(GameState::Game)));
     }
 }
+
+#[derive(Component)]
+pub struct Wall;
 
 #[derive(Bundle)]
 struct WallBundle {
     rigidbody: RigidBody,
     collider: Collider,
     collision_groups: CollisionGroups,
+    wall: Wall,
 }
 
 impl Default for WallBundle {
@@ -43,6 +47,7 @@ impl Default for WallBundle {
             rigidbody: RigidBody::Fixed,
             collider: Collider::cuboid(4.0, 4.0),
             collision_groups: collision_layers::WALL,
+            wall: Wall,
         }
     }
 }
