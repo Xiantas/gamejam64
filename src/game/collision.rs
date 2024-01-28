@@ -16,30 +16,28 @@ pub struct ColliderBundle {
 impl From<&EntityInstance> for ColliderBundle {
     fn from(entity_instance: &EntityInstance) -> ColliderBundle {
         let rotation_constraints = LockedAxes::ROTATION_LOCKED;
-        let friction = Friction {
-            coefficient: 0.0,
-            combine_rule: CoefficientCombineRule::Min,
-        };
+        let gravity_scale = GravityScale(0.0);
+
         match entity_instance.identifier.as_ref() {
             "Player" => ColliderBundle {
                 collider: Collider::ball(4.0),
                 rigid_body: RigidBody::Dynamic,
-                friction,
                 rotation_constraints,
+                gravity_scale,
                 ..Default::default()
             },
             "Wall" => ColliderBundle {
                 collider: Collider::cuboid(4., 4.),
                 rigid_body: RigidBody::Fixed,
-                friction,
                 rotation_constraints,
+                gravity_scale,
                 ..Default::default()
             },
             "Enemy" => ColliderBundle {
                 collider: Collider::ball(4.0),
                 rigid_body: RigidBody::Dynamic,
-                friction,
                 rotation_constraints,
+                gravity_scale,
                 ..Default::default()
             },
             _ => ColliderBundle::default(),
