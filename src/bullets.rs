@@ -7,7 +7,10 @@ use bevy::{
 };
 use bevy_rapier2d::prelude::*;
 
-use crate::physics::collision_layers;
+use crate::{
+    physics::collision_layers,
+    game::Wall,
+};
 
 #[derive(Component, Clone)]
 pub struct Bullet {
@@ -74,6 +77,21 @@ pub fn deprecate_bullets(
         bullet.time_to_live.tick(time.delta());
         if bullet.time_to_live.finished() {
             commands.entity(entity).despawn();
+        }
+    }
+}
+
+pub fn bullets_stop_on_wall(
+    mut commands: Commands,
+    bullets: Query<(Entity, &CollidingEntities), With<Bullet>>,
+    walls: Query<Entity, With<Wall>>,
+) {
+    for (e, ce) in &bullets {
+        for w in &walls {
+            if ce.contains(w) {
+                commands.entity(e).despawn();
+                break;
+            }
         }
     }
 }

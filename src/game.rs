@@ -17,7 +17,7 @@ impl Plugin for GamePlugin {
             .add_systems(OnExit(GameState::Game), despawn_with_component::<OnGameScreen>)
 
             .add_plugins(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
-            .add_plugins(RapierDebugRenderPlugin::default())
+//            .add_plugins(RapierDebugRenderPlugin::default())
 
             .add_plugins(LdtkPlugin)
             .add_plugins(player::PlayerPlugin)
@@ -27,7 +27,10 @@ impl Plugin for GamePlugin {
             .register_ldtk_entity::<exit::ExitBundle>("Exit")
             .add_systems(Update, exit::exit_detection.run_if(in_state(GameState::Game)))
 
-            .add_systems(Update, bullets::deprecate_bullets.run_if(in_state(GameState::Game)));
+            .add_systems(Update, (
+                bullets::deprecate_bullets,
+                bullets::bullets_stop_on_wall
+            ).run_if(in_state(GameState::Game)));
     }
 }
 
