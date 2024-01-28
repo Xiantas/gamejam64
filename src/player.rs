@@ -104,7 +104,7 @@ pub fn move_player(
         if keyboard_input.pressed(ScanCode(31)) {-1.0} else {0.0} +
         if keyboard_input.pressed(ScanCode(33)) {1.0} else {0.0};
 
-        player_velocity.linvel = 100.0 * Vect{x: x_input, y: y_input}.normalize_or_zero();
+        player_velocity.linvel = 60.0 * Vect{x: x_input, y: y_input}.normalize_or_zero();
 }
 
 pub fn shoot(
@@ -119,7 +119,7 @@ pub fn shoot(
         if let Some(mouse_pos) = mouse.pos {
 
             let player_pos = player.translation;
-            let dir = 60.0*(mouse_pos.xy() - player_pos.xy()).normalize();
+            let dir = 100.0*(mouse_pos.xy() - player_pos.xy()).normalize();
 
             commands
                 .spawn((
