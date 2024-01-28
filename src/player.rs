@@ -126,6 +126,7 @@ pub fn move_player(
 
 pub fn shoot(
     mut commands: Commands,
+    asset_server: Res<AssetServer>,
     player: Query<&Transform, With<Player>>,
     mut mouse: ResMut<MouseInfos>,
 ) {
@@ -146,6 +147,7 @@ pub fn shoot(
                     },
                     transform_bundle: TransformBundle::from(
                         Transform::from_translation(player_pos)),
+                    texture: asset_server.load("gem_yellow.png"),
                     ..default()
                 })
                 .insert(OnGameScreen);
