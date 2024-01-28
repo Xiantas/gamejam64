@@ -79,7 +79,7 @@ fn game_setup(
         projection: OrthographicProjection {
             scale: 1.0,
             near: -1000.0,
-            scaling_mode: ScalingMode::WindowSize(8.0),
+            scaling_mode: ScalingMode::FixedVertical(80.0),
             ..Default::default()
         },
         ..Default::default()
