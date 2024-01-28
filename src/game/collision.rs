@@ -35,7 +35,13 @@ impl From<&EntityInstance> for ColliderBundle {
                 rotation_constraints,
                 ..Default::default()
             },
-            // "Ennemy" => 
+            "Enemy" => ColliderBundle {
+                collider: Collider::ball(4.0),
+                rigid_body: RigidBody::Dynamic,
+                friction,
+                rotation_constraints,
+                ..Default::default()
+            },
             _ => ColliderBundle::default(),
         }
     }

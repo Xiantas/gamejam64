@@ -535,7 +535,7 @@
 			"fieldDefs": []
 		},
 		{
-			"identifier": "Ennemy",
+			"identifier": "Enemy",
 			"uid": 56,
 			"tags": [],
 			"exportToToc": false,
@@ -697,7 +697,7 @@
 					"gridTiles": [],
 					"entityInstances": [
 						{
-							"__identifier": "Ennemy",
+							"__identifier": "Enemy",
 							"__grid": [10,14],
 							"__pivot": [0.5,0.5],
 							"__tags": [],
@@ -713,7 +713,7 @@
 							"__worldY": 116
 						},
 						{
-							"__identifier": "Ennemy",
+							"__identifier": "Enemy",
 							"__grid": [20,14],
 							"__pivot": [0.5,0.5],
 							"__tags": [],
@@ -729,7 +729,7 @@
 							"__worldY": 116
 						},
 						{
-							"__identifier": "Ennemy",
+							"__identifier": "Enemy",
 							"__grid": [19,10],
 							"__pivot": [0.5,0.5],
 							"__tags": [],
@@ -761,7 +761,7 @@
 							"__worldY": 52
 						},
 						{
-							"__identifier": "Ennemy",
+							"__identifier": "Enemy",
 							"__grid": [8,5],
 							"__pivot": [0.5,0.5],
 							"__tags": [],
@@ -777,7 +777,7 @@
 							"__worldY": 44
 						},
 						{
-							"__identifier": "Ennemy",
+							"__identifier": "Enemy",
 							"__grid": [6,6],
 							"__pivot": [0.5,0.5],
 							"__tags": [],
@@ -793,7 +793,7 @@
 							"__worldY": 52
 						},
 						{
-							"__identifier": "Ennemy",
+							"__identifier": "Enemy",
 							"__grid": [18,18],
 							"__pivot": [0.5,0.5],
 							"__tags": [],
@@ -809,7 +809,7 @@
 							"__worldY": 148
 						},
 						{
-							"__identifier": "Ennemy",
+							"__identifier": "Enemy",
 							"__grid": [3,16],
 							"__pivot": [0.5,0.5],
 							"__tags": [],
