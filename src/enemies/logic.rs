@@ -8,6 +8,50 @@ use crate::{
     physics::collision_layers,
 };
 
+#[derive(Bundle)]
+pub struct EnemyBundle {
+    enemy: Enemy,
+    transform_bundle: TransformBundle,
+    rigidbody: RigidBody,
+    velocity: Velocity,
+    collider: Collider,
+    collision_groups: CollisionGroups,
+    gravity_scale: GravityScale,
+    colliding_entities: CollidingEntities,
+    active_events: ActiveEvents,
+    locked_axes: LockedAxes,
+    sprite: Sprite,
+    texture: Handle<Image>,
+    visibility: Visibility,
+    inherited_visibility: InheritedVisibility,
+    view_visibility: ViewVisibility,
+}
+
+impl Default for EnemyBundle {
+    fn default() -> Self {
+        EnemyBundle {
+            enemy: Enemy {
+                health: 4.5,
+                speed: 40.0,
+            },
+            transform_bundle: TransformBundle::default(),
+            rigidbody: RigidBody::Dynamic,
+            velocity: Velocity::default(),
+            collider: Collider::ball(3.0),
+            collision_groups: collision_layers::ENEMY,
+            gravity_scale: GravityScale(0.0),
+            colliding_entities: CollidingEntities::default(),
+            active_events: ActiveEvents::COLLISION_EVENTS,
+            locked_axes: LockedAxes::ROTATION_LOCKED_Z,
+            sprite: Sprite::default(),
+            texture: Handle::default(),
+            visibility: Visibility::default(),
+            inherited_visibility: InheritedVisibility::default(),
+            view_visibility: ViewVisibility::default(),
+        }
+    }
+}
+
 pub fn enemies_player_rushing(
     mut enemies: Query<(&mut Velocity, &Transform, &Enemy)>,
     player: Query<&Transform, With<Player>>,
@@ -40,25 +84,11 @@ pub fn bullet_damage(
 
 pub fn enemy_setup(
     mut commands: Commands,
+    asset_server: Res<AssetServer>,
 ) {
-    for i in 0..3 {
-        // TODO: use bundle and default values
-        commands.spawn((
-            Enemy {
-                health: 50.0,
-                speed: 60.0
-            },
-            TransformBundle::from(
-                Transform::from_xyz(0.0, (i+1) as f32 * 200.0, 0.0)
-            ),
-            RigidBody::Dynamic,
-            Velocity::default(),
-            Collider::ball(3.0),
-            collision_layers::ENEMY,
-            GravityScale(0.0),
-            CollidingEntities::default(),
-            ActiveEvents::COLLISION_EVENTS,
-            LockedAxes::ROTATION_LOCKED_Z,
-        ));
-    }
+    commands.spawn(EnemyBundle {
+        transform_bundle: TransformBundle::from(
+              Transform::from_xyz(30.0, 30.0, 5.0)),
+              ..default()
+    });
 }

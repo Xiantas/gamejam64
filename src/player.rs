@@ -12,6 +12,7 @@ use crate::{GameState, mouse::MouseInfos, physics::collision_layers, game::OnGam
 
 #[derive(Default, Component)]
 pub struct Player {
+    speed: f32,
 }
 
 pub struct PlayerPlugin;
@@ -21,7 +22,7 @@ impl Plugin for PlayerPlugin {
         app
             .add_systems(OnEnter(GameState::Game), spawn_player)
             .add_systems(Update, (
-                set_position_from_ldtk_entity,
+                set_player_position_from_ldtk_entity,
                 move_player,
                 shoot,
                 sync_player_camera,
@@ -48,7 +49,7 @@ pub struct PlayerBundle {
     view_visibility: ViewVisibility,
 }
 
-fn set_position_from_ldtk_entity(
+fn set_player_position_from_ldtk_entity(
     entity_query: Query<&EntityInstance, Added<EntityInstance>>,
     mut player_transform: Query<&mut Transform, With<Player>>,
 ) {
@@ -75,16 +76,20 @@ pub fn spawn_player(
                 // resize the sprite to a center region (on the character) of 16x16 pixels in the texture
                 rect: Some(Rect::new(2., 2., 18., 18.)),
                 // resize the sprite to 8x8 pixels matching the size of the tile
-                custom_size: Some(Vec2::ONE * 8.),
+                custom_size: Some(Vec2::ONE * 16.),
+                anchor: bevy::sprite::Anchor::Custom(Vec2::new(0.0, -0.125)),
                 ..Sprite::default()
             },
             // 5 is the z-index of the player to b on top of the tiles
             transform_bundle: TransformBundle::from_transform(Transform::from_translation(Vec2::ZERO.extend(5.0))),
             locked_axes: LockedAxes::ROTATION_LOCKED_Z,
             rigidbody: RigidBody::Dynamic,
-            collider: Collider::ball(4.0),
+            collider: Collider::ball(2.5),
             collision_groups: collision_layers::PLAYER,
             gravity_scale: GravityScale(0.0),
+            player: Player {
+                speed: 45.0,
+            },
             ..PlayerBundle::default()
         })
         .insert(OnGameScreen);
@@ -92,10 +97,10 @@ pub fn spawn_player(
 
 pub fn move_player(
     keyboard_input: Res<Input<ScanCode>>,
-    mut player_velocity: Query<&mut Velocity, With<Player>>
+    mut player: Query<(&mut Velocity, &Player)>
 ) {
 
-    let Ok(mut player_velocity) = player_velocity.get_single_mut() else { return };
+    let Ok((mut player_velocity, player)) = player.get_single_mut() else { return };
 
     let y_input: f32 =
         if keyboard_input.pressed(ScanCode(18)) {1.0} else {0.0} +
@@ -104,7 +109,7 @@ pub fn move_player(
         if keyboard_input.pressed(ScanCode(31)) {-1.0} else {0.0} +
         if keyboard_input.pressed(ScanCode(33)) {1.0} else {0.0};
 
-        player_velocity.linvel = 60.0 * Vect{x: x_input, y: y_input}.normalize_or_zero();
+        player_velocity.linvel = player.speed * Vect{x: x_input, y: y_input}.normalize_or_zero();
 }
 
 pub fn shoot(
