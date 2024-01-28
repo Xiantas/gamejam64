@@ -9,6 +9,7 @@ pub struct ColliderBundle {
     pub velocity: Velocity,
     pub rotation_constraints: LockedAxes,
     pub gravity_scale: GravityScale,
+    pub damping: Damping,
     pub friction: Friction,
     pub density: ColliderMassProperties,
 }
@@ -17,6 +18,10 @@ impl From<&EntityInstance> for ColliderBundle {
     fn from(entity_instance: &EntityInstance) -> ColliderBundle {
         let rotation_constraints = LockedAxes::ROTATION_LOCKED;
         let gravity_scale = GravityScale(0.0);
+        let damping = Damping {
+            linear_damping: 30.0,
+            angular_damping: 0.0,
+        };
 
         match entity_instance.identifier.as_ref() {
             "Player" => ColliderBundle {
@@ -24,6 +29,7 @@ impl From<&EntityInstance> for ColliderBundle {
                 rigid_body: RigidBody::Dynamic,
                 rotation_constraints,
                 gravity_scale,
+                damping,
                 ..Default::default()
             },
             "Wall" => ColliderBundle {
@@ -38,6 +44,7 @@ impl From<&EntityInstance> for ColliderBundle {
                 rigid_body: RigidBody::Dynamic,
                 rotation_constraints,
                 gravity_scale,
+                damping,
                 ..Default::default()
             },
             _ => ColliderBundle::default(),

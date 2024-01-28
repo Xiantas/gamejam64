@@ -6,13 +6,18 @@ use bevy_ecs_ldtk::prelude::*;
 pub struct Enemy {
     pub health: f32,
     pub speed: f32,
+    pub track_distance: f32,
+    pub track_player: bool,
 }
+
 
 impl Default for Enemy {
     fn default() -> Self {
         Self {
             health: 4.5,
             speed: 40.0,
+            track_distance: 40.0,
+            track_player: false,
         }
     }
 }
@@ -91,14 +96,21 @@ impl LdtkEntity for EnemyBundle {
 
 
 pub fn enemies_player_rushing(
-    mut enemies: Query<(&mut Velocity, &Transform, &Enemy)>,
+    mut enemies: Query<(&mut Velocity, &Transform, &mut Enemy)>,
     player: Query<&Transform, With<Player>>,
 ) {
     let Ok(player) = player.get_single() else { return };
 
-    for (mut v, t, e) in &mut enemies {
-        let dir = (player.translation - t.translation).xy().normalize_or_zero();
-        v.linvel = e.speed * Vect{x: dir.x, y: dir.y};
+    for (mut enemy_velocity, enemy_transform, mut enemy) in &mut enemies {
+        if enemy.track_player {
+            let dir = (player.translation - enemy_transform.translation).xy().normalize_or_zero();
+            enemy_velocity.linvel = enemy.speed * Vect{x: dir.x, y: dir.y};
+        }else {
+            // if the enemy is too far away from the player, don't rush
+            if player.translation.xy().distance(enemy_transform.translation.xy()) <= enemy.track_distance {
+                enemy.track_player = true;
+            }
+        }
     }
 }
 
