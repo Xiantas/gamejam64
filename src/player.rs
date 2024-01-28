@@ -19,9 +19,9 @@ pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app
-            .register_ldtk_entity::<PlayerBundle>("Player")
-            .add_systems(OnEnter(GameState::Game), init_player_texture)
+            .add_systems(OnEnter(GameState::Game), spawn_player)
             .add_systems(Update, (
+                set_position_from_ldtk_entity,
                 move_player,
                 shoot,
                 sync_player_camera,
@@ -29,13 +29,13 @@ impl Plugin for PlayerPlugin {
     }
 }
 
+
 //todo maybe use it
-#[derive(Bundle, LdtkEntity)]
+#[derive(Default, Bundle)]
 pub struct PlayerBundle {
     player: Player,
     rigidbody: RigidBody,
     velocity: Velocity,
-    #[with(spawn_player_transform)]
     transform_bundle: TransformBundle,
     collider: Collider,
     collision_groups: CollisionGroups,
@@ -48,37 +48,46 @@ pub struct PlayerBundle {
     view_visibility: ViewVisibility,
 }
 
-impl Default for PlayerBundle {
-    fn default() -> Self {
-        Self {
-            player: Player::default(),
-            rigidbody: RigidBody::Dynamic,
-            velocity: Velocity::default(),
-            transform_bundle: TransformBundle::default(),
-            collider: Collider::ball(4.0),
-            collision_groups: collision_layers::PLAYER,
-            gravity_scale: GravityScale(0.0),
-            locked_axes: LockedAxes::ROTATION_LOCKED_Z,
-            sprite: Sprite::default(),
-            texture: Handle::default(),
-            visibility: Visibility::default(),
-            inherited_visibility: InheritedVisibility::default(),
-            view_visibility: ViewVisibility::default(),
+fn set_position_from_ldtk_entity(
+    entity_query: Query<&EntityInstance, Added<EntityInstance>>,
+    mut player_transform: Query<&mut Transform, With<Player>>,
+) {
+
+    let Ok(mut player_transform) = player_transform.get_single_mut() else { return };
+
+    for entity_instance in entity_query.iter() {
+        if entity_instance.identifier == "Player" {
+            player_transform.translation.x = entity_instance.grid.x as f32 * 8.0;
+            player_transform.translation.y = entity_instance.grid.y as f32 * 8.0;
+            return;
         }
     }
 }
 
-fn spawn_player_transform(entity_instance: &EntityInstance) -> TransformBundle {
-    TransformBundle::from_transform(Transform::from_xyz(entity_instance.grid.x as f32, entity_instance.grid.y as f32, 0.0))
-}
-
-pub fn init_player_texture(
-    asset_server: Res<AssetServer>,
-    mut player_texture: Query<&mut Handle<Image>, With<Player>>,
+pub fn spawn_player(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>
 ) {
-    let Ok(mut player_texture) = player_texture.get_single_mut() else { return };
-
-    *player_texture = asset_server.load("wizard_red_staff_idle_01.png");
+    commands
+        .spawn(PlayerBundle{
+            texture: asset_server.load("wizard_red_staff_idle_01.png"),
+            sprite: Sprite{
+                // resize the sprite to a center region (on the character) of 16x16 pixels in the texture
+                rect: Some(Rect::new(2., 2., 18., 18.)),
+                // resize the sprite to 8x8 pixels matching the size of the tile
+                custom_size: Some(Vec2::ONE * 8.),
+                ..Sprite::default()
+            },
+            // 5 is the z-index of the player to b on top of the tiles
+            transform_bundle: TransformBundle::from_transform(Transform::from_translation(Vec2::ZERO.extend(5.0))),
+            locked_axes: LockedAxes::ROTATION_LOCKED_Z,
+            rigidbody: RigidBody::Dynamic,
+            collider: Collider::ball(4.0),
+            collision_groups: collision_layers::PLAYER,
+            gravity_scale: GravityScale(0.0),
+            ..PlayerBundle::default()
+        })
+        .insert(OnGameScreen);
 }
 
 pub fn move_player(
