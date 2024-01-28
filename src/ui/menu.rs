@@ -96,7 +96,7 @@ fn main_menu_setup(mut commands: Commands) {
                     justify_content: JustifyContent::Center,
                     ..default()
                 },
-                background_color: Color::ORANGE.into(),
+                background_color: Color::CRIMSON.into(),
                 ..default()
             },
             OnMainMenuScreen,
@@ -116,7 +116,7 @@ fn main_menu_setup(mut commands: Commands) {
                     // Display the game name
                     parent.spawn(
                         TextBundle::from_section(
-                            "Game Jam 64",
+                            "The sorcerer's cave",
                             TextStyle {
                                 font_size: 80.0,
                                 color: TEXT_COLOR,
