@@ -3,6 +3,7 @@ use bevy_rapier2d::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
 use crate::{enemies, physics::collision_layers, player, systems, utils::despawn_with_component, GameState};
+mod collision;
 
 pub struct GamePlugin;
 
