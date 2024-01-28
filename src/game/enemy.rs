@@ -1,7 +1,25 @@
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
-use super::data::Enemy;
+#[derive(Component)]
+pub struct Enemy {
+    pub health: f32,
+    pub speed: f32,
+}
+
+use crate::GameState;
+
+pub struct EnemyPlugin;
+
+impl Plugin for EnemyPlugin {
+    fn build(&self, app: &mut App) {
+        app
+            .add_systems(OnEnter(GameState::Game), enemy_setup)
+            .add_systems(Update, enemies_player_rushing.run_if(in_state(GameState::Game)))
+            .add_systems(Update, bullet_damage);
+    }
+}
+
 use crate::{
     bullets::Bullet,
     player::Player,

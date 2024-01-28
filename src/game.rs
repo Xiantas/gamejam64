@@ -2,10 +2,11 @@ use bevy::{prelude::*, render::camera::ScalingMode};
 use bevy_rapier2d::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
-use crate::{enemies, physics::collision_layers, player, bullets, utils::despawn_with_component, GameState};
+use crate::{physics::collision_layers, player, bullets, utils::despawn_with_component, GameState};
 
 mod exit;
 mod collision;
+mod enemy;
 
 pub struct GamePlugin;
 
@@ -20,7 +21,7 @@ impl Plugin for GamePlugin {
 
             .add_plugins(LdtkPlugin)
             .add_plugins(player::PlayerPlugin)
-            .add_plugins(enemies::EnemyPlugin)
+            .add_plugins(enemy::EnemyPlugin)
             .insert_resource(LevelSelection::index(0))
 
             .register_ldtk_entity::<exit::ExitBundle>("Exit")

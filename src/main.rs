@@ -3,7 +3,6 @@ mod player;
 mod ui;
 mod utils;
 mod game;
-mod enemies;
 mod physics;
 mod mouse;
 
@@ -24,7 +23,7 @@ fn main() {
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
                 title: String::from("gamejam64"),
-                mode: bevy::window::WindowMode::BorderlessFullscreen,
+                mode: bevy::window::WindowMode::Windowed,
                 ..default()
             }),
             ..default()
